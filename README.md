@@ -242,3 +242,394 @@ Sam Newman (ThoughtWorks)
         - e.g., could run end-to-end test cases in production for some things
         - if one service is at 100% is that a problem? not necessarily if many nodes
       
+# Putting the network to work
+
+Manish Vachharajani, F5 Networks 
+
+[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42768)
+
+- avoid render blocking by js, even if script is at the end of the body
+- many pages still don't enable transport compression (http gzip)
+  - though for some cases, this can add some latency to compress/decompress (ed: what cases? already compressed data?)
+- css @imports
+  - clean code but causes sequential loading
+- limited to 6 connections for the same domain
+- semantic compression: minification or jpg
+  - dynamically size images for the device
+- NY to London RTT is 28ms
+  - 84 ms to establish TCP connection
+  - 224 ms to establish https connection
+  - google recommends aiming for 200-300ms for page render
+- TLS optimizations
+  - first, use https://www.ssllabs.com/
+  - session re-use
+    - session tickets
+      - rather than session cache (where often the caches aren't shared among https terminator servers)
+      - eliminates a round trip
+    - SSL false start
+      - guessing what cipher the server will want to use and pretransmit http request along with message
+      - eliminates a round trip
+      - browsers use heuristics to determine this
+    - OCSP stapling
+      - client has to validate that the server cert is legit
+        - could download the CRL to determine this
+          - this is a new connection/DNS lookup and overhead
+          - instead, use OCSP so the server sends along cert verification to client
+- (SPONSOR PART)
+  - smart proxies (like BigIP): alternative to doing it yourself
+    - can inline js/css and images
+    - can optimize images
+    - can do URL rewriting to help with browser caching
+
+# Failure is an option
+
+Ian Malpass, Etsy 
+
+[slides](https://speakerdeck.com/indec/failure-is-an-option) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/4168)
+
+- 3 truths
+  - 1. you will create bugs
+  - 2. you will build the wrong thing (understanding of requirements is not perfect)
+  - 3. you will not foresee th unexpected
+- failure is inevitable
+  - expensive failure is not
+  - traditional response: erect barriers to prevent people from doing harm
+  - if we spend time and effort hiring good people, need to turst them to do the right thing
+- deploys
+  - at etsy, can deploy master at any time with minimal ceremony
+  - uses https://github.com/etsy/deployinator
+  - should be fast and easy
+    - this means that deploys can happen often
+    - this means that changes are smaller (and less risky)
+    - code reviews
+      - smaller changes are easier to review
+      - large diffs: nothing is found by reviewers because it is overwhelming (missed bugs)
+- manual testing
+  - very little of this is done
+  - they have minimal QE resources, usually focusing on areas that are tough to test
+  - QA is a job function of all engineers
+  - QA should be a partner rather than a barrier at end of development
+- security
+  - like QA, collaborate rather than act as gatekeepers
+  - partner with them to get feedback early
+- automated testing
+  - more tests that are complex means that it takes longer to run
+    - means that deploys take longer (e.g., 1h to deploy)
+    - they found that a small minority of the tests take the majority of the time
+      - deleted many fo these because they were often obscure with minimal benefit
+      - no tolerance for flaky tests (tests which pass/fail at random)
+        - refactor or delete
+- try command
+  - etsy internal tool
+  - run tests on full blown staging environment prior to pushing
+- graphs
+  - aggregate metrics to combine multiple
+    - e.g., their "screwed users" metric
+  - graphs have dotted lines to indicate when deploys happen
+  - engineers should be able to make their own dashboards
+- dark code
+  - code that's not executed
+  - this allows for shipping code incrementally but not necessarily releasing it
+  - feature flags
+    - to turn feature on/off
+    - individual engineers can turn a flag on
+    - can enable some percentage of traffic to use new feature
+    - increment percentage as desired
+      - if there's some bug, just drop it to zero
+    - this is the closest thing to a feature launch at etsy
+    - sort of like A/B testing
+  - prototype
+    - allow users to opt-in to new features
+- we still fail
+  - culture of blamelessness
+    - this is core to how we learn from failure
+    - have postmortems after something goes wrong
+      - share results with everyone
+- celebrate ailure
+  - 3 armed sweater awad
+    - awarded to the individual or team who breaks site trying to do something spectacular
+    - learn from the mistake
+
+# Crafting performance alerting tools
+
+Allison McKnight, Etsy
+
+[slides](https://speakerdeck.com/aemcknig/crafting-performance-alerting-tools) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42804) | 
+
+(no notes; standing room only)
+
+# osquery: Approaching security the hacker way
+
+Mike Arpaia, Facebook
+
+[slides](https://speakerdeck.com/marpaia/osquery-approaching-security-the-hacker-way) | [velocity info](velocityconf.com/devops-web-performance-2015/public/schedule/detail/41762)
+
+- other talks go into more depth on osquery itself
+- secrecy has stifled innovation
+  - not much software out there to help with modern attacks
+  - we implement the same fixes, poorly
+ - Attacker Math 101
+  - see https://www.trailofbits.com/resources/attacker_math_101_slides.pdf
+  - economics behind how attackers think
+  - attack graphs to determine what attackers will focus on
+- osquery
+  - performant host instruementation tool with sql interface
+    - issue sql query and get back live inforamtion at runtime
+    - tables for
+      - running processes
+      - loaded kernel modeules
+      - route tables
+      - installed software
+      - active network connections
+      - etc
+    - osqueryi
+      - interactive mode
+      - a sql console
+    - never shells out (e.g., by using ```ps```)
+    - osqueryd
+      - daemon for host monitoring
+      - can periodically execute queries to find state changes
+      - logs results for aggregation and analytics
+  - has file integrity checks
+    - e.g., to know if a file /bin/** has changed
+  - design decisions
+    - expose capabilities safely
+      - tables allow us to give away answers without giving away the questions (for security issues)
+      - capabilities can be configured rather than developed
+        - good for security people who may not be comfortable developing new plugins
+      - MIDAS
+        - predecessor to osquery
+        - drawbacks
+          - required writing code in python to create a new check
+          - internal facebook and external code diverged
+            - osquery is developed 100% opensource on github
+
+# Enabling microservices at Orbitz
+
+Steve Hoffman and Rick Fast, Orbitz
+
+[slides](http://cdn.oreillystatic.com/en/assets/1/event/122/Enabling%20microservices%20at%20Orbitz%20Presentation.zip) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/40700)
+
+- 2010: only releasing twice a year
+  - now it's about 1-4 days per release
+- experiment: decompose a "monolithic service" into 40+ subservices
+  - using spring-boot app in docker container
+  - uses consul which runs on every container
+  - network: VIP -> multiple haproxy instances -> spring-boot 
+- before continuous delivery
+  - build -> test -> discard build
+  - instead, deploy the successful build
+- used yeoman to help generate java microservices
+  - builds up a chasis with libraries to set up logstash connection etc
+  - generated code is pushed to a new repo (in atlassian stash)
+  - once code hits master its not going to stop until its pushed to production
+    - uses pull requests
+    - once reviewers click OK, merge to master
+- pipeline
+  - build/unit-test/publish
+    - pull latest version from master (with gradle)
+    - updates version number to a RC version
+    - creates a docker container which has the spring-boot jar along with consul/logstash forwarders
+    - smoke/acceptance tsets use embedded DBs in spring-boot framework
+  - deploy
+    - using ansible
+    - deploys docker image to some host group (e.g., dev)
+    - spring-boot
+      - uses custom health checks at /health
+        - used with consul to ensure things are running ok
+    - once new version is up and /health is OK, gracefully stop previous version
+      - keep doing this until all deployments are done
+      - took 30 minutes to serially update every node
+      - now uses marathon with mesos
+- spring-boot configuration
+  - components configure themselves based on what environment they are in
+    - e.g., using graphite vs aws cloudwatch
+    - swagger
+    - hystrix
+    - retrofit + consul
+- summary
+  - use localhost helpers with docker deployments
+  - people don't scale, use automation
+  - deliniate configuration concerns
+    - if it's known at compile time -> build into docker image
+    - known at boot time -> build into ansible playbook/launcher
+    - if it changes anytime -> externalize with consul or etcd or zookeeper
+    
+# Burnout in tech
+
+John Allspaw (Etsy), Christina Maslach (UC Berkeley), Amanda Folson (PagerDuty), Katherine Daniels (Etsy), Laura Bell (SafeStack Limited), Vijay Gill (Salesforce.com) 
+
+[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/43153)
+
+- burnout has 3 components
+  - 1. exhaustion
+    - primarily due to work overload
+    - results in problems related to personal health
+    - possibly results in sacraficing personal reslationships
+  - 2. cynicism (main component of burnout)
+    - very negative view of the job; "take this job and shove it"
+    - lost motivation/passion
+    - does bare minimum effort
+  - 3. professional inefficacy
+    - this is seen later in burnout process
+    - negative feelings turn in on oneself
+    - precursor to mental health issues (e.g., depression)
+- burnout as a stress phenomenon
+  - chronic form of stress; not a result of a specific incident
+  - "erosion of my soul"
+  - others may notice it in you prior to you noticing
+- outcomes of burnout
+  - poor quality of work
+  - low morale
+  - absenteeism
+  - turnover
+  - health problems
+  - depression
+  - family problems
+- six strategic areas
+  - if there's a mis-match between a person and the job
+  - workload
+    - what most people think of as a burnout cause
+    - demands are too high; resources too low
+    - one of the best predictors of the exhaustion component of burnout
+    - most people think this is the main cause but often it isn't
+  - control
+    - how much say/discretion/choice you have about how you do your job
+    - do you have a choice or are you micromanaged? 
+  - reward
+    - principle of recognition and positive feedback of doing something well
+    - if you do something well, do people notice?
+      - often a pay increase/bonus isn't as valuable as simple recognition
+  - community
+    - relationships with coworkers, boss, vendors, etc
+    - can you trust each other?
+    - when this goes bad, the workplace becomes toxic
+    - signs: bullying, gossiping, politics
+  - fairness
+    - if people feel like they aren't being treated fairly, cynicism and burnout result
+    - people must think they are being treated fairly (if they are but they don't think they are, it doesn't count)
+  - values
+    - what you're doing shouldnt' be in conflict with what you value
+    - leads to "erosion of soul"
+- standard approach for burnout is to ask "what's wrong with this person?" or "how to fix this person?"
+  - usually it's more widespread than one person
+  - need to think about how to improve work environment
+- what to do about burnout
+  - preventing it is a better strategy than waiting to treat it
+  - building engagement is the best approach
+  - organizational intervention often more productive than individual intervention
+- book references
+  - The Truth About Burnout
+    - recommended particularly
+  - Banishing Burnout
+- question panel
+  - Vijay: high compotency gap leads to issues
+  - hard to know how to fix burnout because not many people evaluate what they try
+
+# Mobile image processing
+
+Tim Kadlec, Akamai
+
+[slides](https://speakerdeck.com/tkadlec/mobile-image-processing-at-velocity-sc-2015) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41625)
+
+- 2012: 10% of every photo ever taken up to that point was taken in that year
+  - 1839: modern photography was invented
+- 1.8 billion photos shared each day
+- sites are now around 2MB with 63% of the website being images
+- decoding jpg images
+  - browser has to go through ~4 steps to decode
+  - chrome shows image decode time in dev tools
+  - ie/edge does as well; easy to use
+  - firefox/safari don't expose
+  - experiment
+    - website with about 10 images, where some pages have them apropriately sized and some are full size
+    - on desktop: 
+      - apropriately sized: 8ms to decode
+      - 400px (for 200px size): 26ms
+      - 6x200pz: 266ms (+3000% increase)
+    - results on nexus 4
+      - apropriately sized: 30ms to decode
+      - 400px: 100ms
+      - 6x size: 1500ms (5000% increase)
+    - rule number 1: resize images for the device
+      - applies to sprites too, which may be larger than necessary
+      - simply reducing size by 50px is minor but saves a lot fo bytes
+      - for larger sizes, have more breakpoints
+  - 4:2:0 subsampling has large memory gains
+  
+# Teaching GitHub for Poets
+
+[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41347)
+
+- everyone in Kickstarter can commit code
+  - GitHub for Poets is a class used to teach non-techies how to commit code to make fixes, usually for small things like typos and documentation
+  - uses pull requests
+    - someone watches and approves these within an hour or so (which then are deployed to production continuously)
+- why do github for poets?
+  - its a lightweight process
+  - before:
+    - notice a typo
+    - send report to manager
+    - manager tells other manager at weekly meeting
+    - typo bug is put into some list
+    - ticket is filed
+  - cultural values
+    - transparency and inclusivity
+    - pull request process builds consensus
+    - version control is communication
+    - 
+# Yesterday's perf best-practices are today's HTTP/2 anti-patterns
+
+[slides](http://bit.ly/http2-opt) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42385)
+
+- half of browsers already support http2
+- chrome will deprecate SPDY (and NPN) in early 2016
+- HTTP2 intro
+  - primise: optimizing for low latency delivery
+  - we are latency bound
+    - increasing bandwidth has diminishing returns
+  - uses one tcp connection
+    - multiplexed and prioritized streams
+    - binary framing layer
+    - header compression
+      - http 1.1: headers were uncompressed (which can be significant with cookies)
+  - HPACK header compression
+    - optimizes sent headers with huffman encoding and references to previously sent headers
+  - for more info, see High Performance Browser Networking
+- on http1, 74% of active connections carry just a single transaction (Patrick McManus, Mozilla)
+- domain sharding
+  - generally bad for http2
+  - this is the single biggest problem to fix when switching to http2
+- http2 can coalese connections on your behalf if
+  - tls cert is valid for both hosts
+  - hosts resolve to the same IP
+- concatenation/minifaction/spriting
+  - http1.1: careful use is good
+    - improved compression
+    - but some files can't be streamed (css)
+    - single byte update causes a full fetch
+      - inefficient, particularly if concat js is mostly unchanging libraries
+  - http2: avoid it
+- inlining (embedding js/css/images in html)
+  - resources can't be cached independently
+  - breaks multiplexing and prioritization in http2
+  - http1.1: use carefully
+  - http2: replace with server push
+    - jetty has smart push
+      - uses referer header to build a map to guess what resources will be requested
+      - automatic
+- tl;dr
+  - remove:
+    - domain sharding
+    - concatenation
+    - inlining
+  - pick your http2 server carefully
+  
+- question: current state of http2 in servers?
+  - http2 working group has a link
+  - nginx will support by end of the year, but nothing is out yet
+  - h2o
+  - nghttp
+  - nodejs module
+  - apache has a module you can build in
+  - apache traffic server "best version implemented as of today"
