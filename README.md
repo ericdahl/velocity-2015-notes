@@ -578,7 +578,7 @@ Tim Kadlec, Akamai
     - transparency and inclusivity
     - pull request process builds consensus
     - version control is communication
-    - 
+
 # Yesterday's perf best-practices are today's HTTP/2 anti-patterns
 
 [slides](http://bit.ly/http2-opt) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42385)
@@ -625,7 +625,6 @@ Tim Kadlec, Akamai
     - concatenation
     - inlining
   - pick your http2 server carefully
-  
 - question: current state of http2 in servers?
   - http2 working group has a link
   - nginx will support by end of the year, but nothing is out yet
