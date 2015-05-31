@@ -87,3 +87,158 @@ Laine Campbell, Pythian
       - incidents/alerts: uchiwa
     - misc
       - scaling graphite is a pain because you have to specify what type of node each is and set up hashing algorithm
+
+# The principles of microservices
+
+Sam Newman (ThoughtWorks) 
+[slides](http://www.slideshare.net/spnewman/principles-of-microservices-velocity) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41106)
+
+- wrote book "Building Microservices"
+- microservices
+  - modeled after business domain rather than tech boundaries
+  - small autonomous services that work together
+  - "small enough and no smaller"
+- success stories: Gilt, REA, Netflix
+- microservices give more choices
+  - DBs, deployment platform, etc
+  - but this means that it can take time tofigure out what path to take (exhausting)
+  - organizations are not used to being able to make choices
+    - i.e., the monolithic app usually dictates the framework, language, etc
+  - should have some framework to help with this
+    - 12 factor app
+      - goal: if you follow these, your software will work well on heroku
+- 8 Principles of Microservices
+  - 1. Model after the business domain
+    - before, everyone had the same 3 tier architecture (presentation, business logic, data access)
+      - issues:
+        - simple change often slices between all of the layers
+        - each layer is often managed by different people
+    - when boundaries are around a business domain
+      - a change to what the business does is more likely to sit inside of a service boundary
+      - when teams own services, they can become experts in that domain
+      - more obvious and clear boundaries
+        - less breaking API changes
+      - how to fidn these boundaries?
+        - ask "what are the capabilities that the system offers"?
+          - e.g., registering a new customer, etc
+          - collect similar capabilities and organize them into services
+        - see "Implementing Domain-Driven Design" by Vaughn Vernon
+  - 2. Culture of Automation
+    - story:
+      - at REA, they had a monolithic system which they had been investing in automating to cloud
+      - wanted to move to smaller units
+      - goal: microservices by 3 months
+      - after 12 months, they finally had 10
+      - but after 18, they had 60
+        - once they had the infrastructure/automation in place, growth exploded
+  - 3. Hide Implementation Details
+    - had thing to get right
+    - allow services to remain indepent so they can change without impacting each other
+    - common 'service-to-service' integration pattern
+      - two services read/write to the same DB schema
+      - this makes it very difficult to make changes; everything is visible
+        - so, hide your databases, exposing them only via APIs
+    - serializing complex nested domain objects often exposes more info than ideal
+    - could create client libraries to call service
+      - this often starts to take on implementation logic
+      - "be careful of client libraries"
+      - beware of DRY for this
+        - DRY is okay for within a single process
+        - but enforcing DRY across multiple processes/organizations by creating libraries can introduce coupling
+  - 4. Decentralize all the things
+    - embrace self-service
+      - do you have to go to another team to launch new VMs?
+    - but should have some shared governance
+      - e.g., to decide what DBs to use
+    - internal open source
+      - use pull request to request changes for another team
+        - requires high level of organizational maturity
+    - dumb pipes, smart endpoints
+      - middleware should not have behavior/logic; should be dumb
+      - logic should be in the fringes (services)
+    - how to organize business workflow?
+      - orchestration
+        - service which is the brains of the operation, calling other services
+        - not ideal
+          - logic is gradually drained from the edge services into this orchestration service
+        - choreograph based approach
+          - each service knows what its role is in the ssytem
+            - e.g., submits events to some topic where other services may be listening
+            - can be more resiliant
+            - but,
+              - if a step fails, it's harder to debug
+              - process is defined implicitly rather than explicitly (as in orchestration)
+                - so you need something to monitor for system invariants
+  - 5. Deploy Independently (most important of the 8)
+    - should be able to make a change to a service and deploy it to prod without having to deploy anything else
+    - if you have two services that you have to deploy together, fix it
+    - one service per host (or container or VM)
+      - when you have multiple services in one host/container/VM, hard to reduce side effects
+        - e.g., if a service uses all the CPU, others impacted
+    - customer driven contracts
+      - end-to-end-testing
+        - start up all of the services and then test them together
+        - doesn't scale well
+        - see http://googletesting.blogspot.com/2015/04/just-say-no-to-more-end-to-end-tests.html
+        - see pact library for this: https://github.com/realestate-com-au/pact
+      - e.g., shipping -> inventory service dependency
+        - shipping service has a set of expectations of inventory service
+        - inventory service should have set of tests based on each of its clients expectations (e.g., shipping)
+      - how to implement a breaking change?
+        - don't try to do a lock step release
+          - consumers need to be in charge of deciding when they release
+        - co-exist endpoints
+          - create a v2 endpoint alongside v1
+          - give clients time to migrate to v2 from v1
+  - 6. Consumer First
+    - need to think about consumer's needs before tech details
+    - documentation
+      - make it easy for people to consume service
+      - swagger is good for this
+    - API Gateways
+      - skeptical of generic ones
+      - api keys are useful in determining who is using the service
+      - (Sam is looking into 3scale which looks nice)
+    - Service Discovery
+      - using tools like zookeeper, etcd, consul
+      - allows machines to register themselves for others to find them
+      - (Sam is particularly impressed with Consul)
+  - 7. Isolate Failure
+    - if a service breaks and your entire system breaks, you don't have a SOA but instead a monolith chopped up
+    - avoid having a "distributed single point of failure"
+      - story: classified ads website for a print company which turned itself into an online company
+        - ad-hoc IT company
+        - used Strangler App Pattern
+          - intercept calls to old system and potentially redirect to the new system
+          - was working well but had an issue with connections to downstream services
+          - downstream service was failing in worst possible way, by being really slow
+          - fixed in 3 ways
+            - fixed timeout values
+            - added one thread pool per downstream service
+            - added circuit breakers
+              - protect you if something breaks
+              - after a certain number of timeouts/errors, mark the node as failed and fail-fast
+              - useful for unplanned outage but also planned outage
+                - flip circuit breaker, deploy new service, flip it back on
+              - for java, use hystrix
+    - if you go into microservices blindly, you'll be badly bitten
+  - 8. Highly Observable
+    - each independent service should expose its health on some status page
+      - put business metrics here too
+    - aggregation
+      - treat nodes as stateless and move info to a central place
+      - logs: use ELK stack for on-site
+      - stats
+        - on-prem: graphite/statsd
+        - off-site: new-relic
+      - Correlation IDs
+        - how to track down the context in which something happened?
+        - originating request gets some ID assigned to it
+        - ID is passed through the system
+        - even better? using parent and child IDs so you can generate call graphs
+        - important to put this in earlier rather than later; may be hard to add
+      - semantic monitoring
+        - ensure that the system is working rather than focusing on low-level checks
+        - e.g., could run end-to-end test cases in production for some things
+        - if one service is at 100% is that a problem? not necessarily if many nodes
+      
