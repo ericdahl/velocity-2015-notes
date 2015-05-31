@@ -1,16 +1,19 @@
 
-- [Putting web performance best practices together to create the perfect single page application](#putting-web-performance-best-practices-together-to-create-the-perfect-single-page-application)
-- [Building an effective observability stack ](#building-an-effective-observability-stack)
-- [The principles of microservices](#the-principles-of-microservices)
-- [Putting the network to work](#putting-the-network-to-work)
-- [Failure is an option](#failure-is-an-option)
-- [Crafting performance alerting tools](#crafting-performance-alerting-tools)
-- [osquery: Approaching security the hacker way](#osquery-approaching-security-the-hacker-way)
-- [Enabling microservices at Orbitz](#enabling-microservices-at-orbitz)
-- [Burnout in tech](#burnout-in-tech)
-- [Mobile image processing](#mobile-image-processing)
-- [Teaching GitHub for Poets](#teaching-github-for-poets)
-- [Yesterday's perf best-practices are today's HTTP/2 anti-patterns](#yesterdays-perf-best-practices-are-todays-http2-anti-patterns)
+- Wednesday
+  - [Putting web performance best practices together to create the perfect single page application](#putting-web-performance-best-practices-together-to-create-the-perfect-single-page-application)
+  - [Building an effective observability stack ](#building-an-effective-observability-stack)
+  - [The principles of microservices](#the-principles-of-microservices)
+- Thursday
+  - [Putting the network to work](#putting-the-network-to-work)
+  - [Failure is an option](#failure-is-an-option)
+  - [Crafting performance alerting tools](#crafting-performance-alerting-tools)
+  - [osquery: Approaching security the hacker way](#osquery-approaching-security-the-hacker-way)
+- Friday
+  - [Enabling microservices at Orbitz](#enabling-microservices-at-orbitz)
+  - [Burnout in tech](#burnout-in-tech)
+  - [Mobile image processing](#mobile-image-processing)
+  - [Teaching GitHub for Poets](#teaching-github-for-poets)
+  - [Yesterday's perf best-practices are today's HTTP/2 anti-patterns](#yesterdays-perf-best-practices-are-todays-http2-anti-patterns)
 
 
 # Putting web performance best practices together to create the perfect single page application
