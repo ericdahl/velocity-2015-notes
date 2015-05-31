@@ -8,7 +8,7 @@ Chris Love, Love 2 Dev
   - aggressively purge cache
     - iOS 3 Safari had a 26KB limit on cache items
   - less memory
-  - weaker processosr
+  - weaker processsor
 - cellular connections
   - devs should be testing on connections like this rather than local
   - unreliable, losing connections
@@ -35,7 +35,7 @@ Laine Campbell, Pythian
 [slides](http://cdn.oreillystatic.com/en/assets/1/event/122/Building%20an%20effective%20observability%20stack%20%20Presentation.pdf) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41148)
 - objectives of observability
   - business velocity
-  - business availability: preemptively identify issues before they become problems
+  - business availability: pre-emptively identify issues before they become problems
   - business efficiency: cost, resource utilization
   - business scalability: identifying constraints and bottlenecks
 - principles of observability
@@ -91,6 +91,7 @@ Laine Campbell, Pythian
 # The principles of microservices
 
 Sam Newman (ThoughtWorks) 
+
 [slides](http://www.slideshare.net/spnewman/principles-of-microservices-velocity) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41106)
 
 - wrote book "Building Microservices"
@@ -118,7 +119,7 @@ Sam Newman (ThoughtWorks)
       - when teams own services, they can become experts in that domain
       - more obvious and clear boundaries
         - less breaking API changes
-      - how to fidn these boundaries?
+      - how to find these boundaries?
         - ask "what are the capabilities that the system offers"?
           - e.g., registering a new customer, etc
           - collect similar capabilities and organize them into services
@@ -133,7 +134,7 @@ Sam Newman (ThoughtWorks)
         - once they had the infrastructure/automation in place, growth exploded
   - 3. Hide Implementation Details
     - had thing to get right
-    - allow services to remain indepent so they can change without impacting each other
+    - allow services to remain independent so they can change without impacting each other
     - common 'service-to-service' integration pattern
       - two services read/write to the same DB schema
       - this makes it very difficult to make changes; everything is visible
@@ -246,7 +247,7 @@ Sam Newman (ThoughtWorks)
 
 Manish Vachharajani, F5 Networks 
 
-[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42768)
+[velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42768)
 
 - avoid render blocking by js, even if script is at the end of the body
 - many pages still don't enable transport compression (http gzip)
@@ -354,7 +355,7 @@ Ian Malpass, Etsy
 
 Allison McKnight, Etsy
 
-[slides](https://speakerdeck.com/aemcknig/crafting-performance-alerting-tools) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42804) | 
+[slides](https://speakerdeck.com/aemcknig/crafting-performance-alerting-tools) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42804) | 
 
 (no notes; standing room only)
 
@@ -362,7 +363,7 @@ Allison McKnight, Etsy
 
 Mike Arpaia, Facebook
 
-[slides](https://speakerdeck.com/marpaia/osquery-approaching-security-the-hacker-way) | [velocity info](velocityconf.com/devops-web-performance-2015/public/schedule/detail/41762)
+[slides](https://speakerdeck.com/marpaia/osquery-approaching-security-the-hacker-way) | [velocity page](velocityconf.com/devops-web-performance-2015/public/schedule/detail/41762)
 
 - other talks go into more depth on osquery itself
 - secrecy has stifled innovation
@@ -374,7 +375,7 @@ Mike Arpaia, Facebook
   - attack graphs to determine what attackers will focus on
 - osquery
   - performant host instruementation tool with sql interface
-    - issue sql query and get back live inforamtion at runtime
+    - issue sql query and get back live information at runtime
     - tables for
       - running processes
       - loaded kernel modeules
@@ -408,7 +409,7 @@ Mike Arpaia, Facebook
 
 Steve Hoffman and Rick Fast, Orbitz
 
-[slides](http://cdn.oreillystatic.com/en/assets/1/event/122/Enabling%20microservices%20at%20Orbitz%20Presentation.zip) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/40700)
+[slides](http://cdn.oreillystatic.com/en/assets/1/event/122/Enabling%20microservices%20at%20Orbitz%20Presentation.zip) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/40700)
 
 - 2010: only releasing twice a year
   - now it's about 1-4 days per release
@@ -420,7 +421,7 @@ Steve Hoffman and Rick Fast, Orbitz
   - build -> test -> discard build
   - instead, deploy the successful build
 - used yeoman to help generate java microservices
-  - builds up a chasis with libraries to set up logstash connection etc
+  - builds up a chassis with libraries to set up logstash connection etc
   - generated code is pushed to a new repo (in atlassian stash)
   - once code hits master its not going to stop until its pushed to production
     - uses pull requests
@@ -430,7 +431,7 @@ Steve Hoffman and Rick Fast, Orbitz
     - pull latest version from master (with gradle)
     - updates version number to a RC version
     - creates a docker container which has the spring-boot jar along with consul/logstash forwarders
-    - smoke/acceptance tsets use embedded DBs in spring-boot framework
+    - smoke/acceptance tests use embedded DBs in spring-boot framework
   - deploy
     - using ansible
     - deploys docker image to some host group (e.g., dev)
@@ -459,13 +460,13 @@ Steve Hoffman and Rick Fast, Orbitz
 
 John Allspaw (Etsy), Christina Maslach (UC Berkeley), Amanda Folson (PagerDuty), Katherine Daniels (Etsy), Laura Bell (SafeStack Limited), Vijay Gill (Salesforce.com) 
 
-[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/43153)
+[velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/43153)
 
 - burnout has 3 components
   - 1. exhaustion
     - primarily due to work overload
     - results in problems related to personal health
-    - possibly results in sacraficing personal reslationships
+    - possibly results in sacraficing personal relationships
   - 2. cynicism (main component of burnout)
     - very negative view of the job; "take this job and shove it"
     - lost motivation/passion
@@ -509,7 +510,7 @@ John Allspaw (Etsy), Christina Maslach (UC Berkeley), Amanda Folson (PagerDuty),
     - if people feel like they aren't being treated fairly, cynicism and burnout result
     - people must think they are being treated fairly (if they are but they don't think they are, it doesn't count)
   - values
-    - what you're doing shouldnt' be in conflict with what you value
+    - what you're doing shouldn't be in conflict with what you value
     - leads to "erosion of soul"
 - standard approach for burnout is to ask "what's wrong with this person?" or "how to fix this person?"
   - usually it's more widespread than one person
@@ -523,14 +524,14 @@ John Allspaw (Etsy), Christina Maslach (UC Berkeley), Amanda Folson (PagerDuty),
     - recommended particularly
   - Banishing Burnout
 - question panel
-  - Vijay: high compotency gap leads to issues
+  - Vijay: high competency gap leads to issues
   - hard to know how to fix burnout because not many people evaluate what they try
 
 # Mobile image processing
 
 Tim Kadlec, Akamai
 
-[slides](https://speakerdeck.com/tkadlec/mobile-image-processing-at-velocity-sc-2015) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41625)
+[slides](https://speakerdeck.com/tkadlec/mobile-image-processing-at-velocity-sc-2015) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41625)
 
 - 2012: 10% of every photo ever taken up to that point was taken in that year
   - 1839: modern photography was invented
@@ -542,13 +543,13 @@ Tim Kadlec, Akamai
   - ie/edge does as well; easy to use
   - firefox/safari don't expose
   - experiment
-    - website with about 10 images, where some pages have them apropriately sized and some are full size
+    - website with about 10 images, where some pages have them appropriately sized and some are full size
     - on desktop: 
-      - apropriately sized: 8ms to decode
+      - appropriately sized: 8ms to decode
       - 400px (for 200px size): 26ms
       - 6x200pz: 266ms (+3000% increase)
     - results on nexus 4
-      - apropriately sized: 30ms to decode
+      - appropriately sized: 30ms to decode
       - 400px: 100ms
       - 6x size: 1500ms (5000% increase)
     - rule number 1: resize images for the device
@@ -559,7 +560,7 @@ Tim Kadlec, Akamai
   
 # Teaching GitHub for Poets
 
-[velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41347)
+[velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/41347)
 
 - everyone in Kickstarter can commit code
   - GitHub for Poets is a class used to teach non-techies how to commit code to make fixes, usually for small things like typos and documentation
@@ -580,12 +581,12 @@ Tim Kadlec, Akamai
     - 
 # Yesterday's perf best-practices are today's HTTP/2 anti-patterns
 
-[slides](http://bit.ly/http2-opt) | [velocity info](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42385)
+[slides](http://bit.ly/http2-opt) | [velocity page](http://velocityconf.com/devops-web-performance-2015/public/schedule/detail/42385)
 
 - half of browsers already support http2
 - chrome will deprecate SPDY (and NPN) in early 2016
 - HTTP2 intro
-  - primise: optimizing for low latency delivery
+  - premise: optimizing for low latency delivery
   - we are latency bound
     - increasing bandwidth has diminishing returns
   - uses one tcp connection
