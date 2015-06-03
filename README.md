@@ -120,7 +120,7 @@ Sam Newman (ThoughtWorks)
 - success stories: Gilt, REA, Netflix
 - microservices give more choices
   - DBs, deployment platform, etc
-  - but this means that it can take time tofigure out what path to take (exhausting)
+  - but this means that it can take time to figure out what path to take (exhausting)
   - organizations are not used to being able to make choices
     - i.e., the monolithic app usually dictates the framework, language, etc
   - should have some framework to help with this
@@ -181,7 +181,7 @@ Sam Newman (ThoughtWorks)
         - not ideal
           - logic is gradually drained from the edge services into this orchestration service
         - choreograph based approach
-          - each service knows what its role is in the ssytem
+          - each service knows what its role is in the system
             - e.g., submits events to some topic where other services may be listening
             - can be more resiliant
             - but,
@@ -309,11 +309,11 @@ Ian Malpass, Etsy
 - 3 truths
   - 1. you will create bugs
   - 2. you will build the wrong thing (understanding of requirements is not perfect)
-  - 3. you will not foresee th unexpected
+  - 3. you will not foresee the unexpected
 - failure is inevitable
   - expensive failure is not
   - traditional response: erect barriers to prevent people from doing harm
-  - if we spend time and effort hiring good people, need to turst them to do the right thing
+  - if we spend time and effort hiring good people, need to trust them to do the right thing
 - deploys
   - at etsy, can deploy master at any time with minimal ceremony
   - uses https://github.com/etsy/deployinator
@@ -365,7 +365,7 @@ Ian Malpass, Etsy
     - have postmortems after something goes wrong
       - share results with everyone
 - celebrate ailure
-  - 3 armed sweater awad
+  - 3 armed sweater award
     - awarded to the individual or team who breaks site trying to do something spectacular
     - learn from the mistake
 
@@ -392,11 +392,11 @@ Mike Arpaia, Facebook
   - economics behind how attackers think
   - attack graphs to determine what attackers will focus on
 - osquery
-  - performant host instruementation tool with sql interface
+  - performant host instrumentation tool with sql interface
     - issue sql query and get back live information at runtime
     - tables for
       - running processes
-      - loaded kernel modeules
+      - loaded kernel modules
       - route tables
       - installed software
       - active network connections
@@ -484,7 +484,7 @@ John Allspaw (Etsy), Christina Maslach (UC Berkeley), Amanda Folson (PagerDuty),
   - 1. exhaustion
     - primarily due to work overload
     - results in problems related to personal health
-    - possibly results in sacraficing personal relationships
+    - possibly results in sacrificing personal relationships
   - 2. cynicism (main component of burnout)
     - very negative view of the job; "take this job and shove it"
     - lost motivation/passion
